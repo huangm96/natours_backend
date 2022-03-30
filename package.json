@@ -1,0 +1,22 @@
+{
+  "name": "natours",
+  "version": "1.0.0",
+  "description": "natours backend",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huangm96/natours_backend.git"
+  },
+  "author": "Min Huang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/huangm96/natours_backend/issues"
+  },
+  "homepage": "https://github.com/huangm96/natours_backend#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}

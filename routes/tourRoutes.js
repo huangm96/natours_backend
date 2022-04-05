@@ -9,14 +9,13 @@ const {
   updateTourById,
   removeTourById,
   checkID,
-  checkBody,
 } = tourController;
 
 router.param('id', checkID);
 
 router.get('/', getAllTours);
 router.get('/:id', getTourById);
-router.post('/', checkBody, createTour);
+router.post('/', createTour);
 router.patch('/:id', updateTourById);
 router.delete('/:id', removeTourById);
 

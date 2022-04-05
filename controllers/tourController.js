@@ -30,7 +30,6 @@ exports.getTourById = (req, res) => {
   res.status(200).json({ status: 'Success', data: { tour: req.tour } });
 };
 exports.createTour = (req, res) => {
-  console.log(req.body);
   res.status(201).send({ status: 'Success' });
 };
 exports.updateTourById = (req, res) => {

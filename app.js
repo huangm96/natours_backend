@@ -7,7 +7,9 @@ const userRouter = require('./routes/userRoutes.js');
 const app = express();
 
 // middleware
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 // built-in middleware, it parses incoming requests with JSON
 app.use(express.json());

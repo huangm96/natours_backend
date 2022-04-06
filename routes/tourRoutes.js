@@ -9,9 +9,12 @@ const {
   updateTourById,
   removeTourById,
   checkID,
+  aliasTopTours,
 } = tourController;
 
 router.param('id', checkID);
+
+router.get('/top-5-cheap', aliasTopTours, getAllTours);
 
 router.get('/', getAllTours);
 router.get('/:id', getTourById);

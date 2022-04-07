@@ -10,11 +10,14 @@ const {
   removeTourById,
   checkID,
   aliasTopTours,
+  getTourStats,
+  getMonthlyPlan,
 } = tourController;
 
 router.param('id', checkID);
-
 router.get('/top-5-cheap', aliasTopTours, getAllTours);
+router.get('/tour-stats', getTourStats);
+router.get('/monthly-plan/:year', getMonthlyPlan);
 
 router.get('/', getAllTours);
 router.get('/:id', getTourById);

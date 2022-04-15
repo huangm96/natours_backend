@@ -1,7 +1,10 @@
 const express = require('express');
-const userController = require('../controllers/userController.js');
+const userController = require('./../controllers/userController.js');
+const authController = require('./../controllers/authController.js');
 
 const router = express.Router();
+
+const { signup } = authController;
 
 const {
   getAllUsers,
@@ -10,6 +13,8 @@ const {
   updateUser,
   removeUserById,
 } = userController;
+
+router.post('/signup', signup);
 
 router.get('/', getAllUsers);
 router.get('/:id', getUserById);

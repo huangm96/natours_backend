@@ -4,7 +4,7 @@ const authController = require('../controllers/authController.js');
 
 const router = express.Router();
 
-const { protect } = authController;
+const { protect, restricTo } = authController;
 
 const {
   getAllTours,
@@ -25,8 +25,13 @@ router.get('/monthly-plan/:year', getMonthlyPlan);
 
 router.get('/', getAllTours);
 router.get('/:id', getTourById);
-router.post('/', createTour);
-router.patch('/:id', updateTourById);
-router.delete('/:id', removeTourById);
+router.post('/', protect, restricTo('admin', 'lead-guide'), createTour);
+router.patch('/:id', protect, restricTo('admin', 'lead-guide'), updateTourById);
+router.delete(
+  '/:id',
+  protect,
+  restricTo('admin', 'lead-guide'),
+  removeTourById
+);
 
 module.exports = router;

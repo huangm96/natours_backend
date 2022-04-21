@@ -11,6 +11,7 @@ const {
   restricTo,
   forgotPassword,
   resetPassword,
+  updateMyPassword,
 } = authController;
 
 const {
@@ -19,6 +20,7 @@ const {
   createUser,
   updateUser,
   removeUserById,
+  updateMe,
 } = userController;
 
 router.post('/signup', signup);
@@ -26,6 +28,9 @@ router.post('/login', login);
 
 router.post('/forgotPassword', forgotPassword);
 router.patch('/resetPassword/:token', resetPassword);
+router.patch('/updateMyPassword', protect, updateMyPassword);
+
+router.patch('/updateMe', protect, updateMe);
 
 router.get('/', protect, getAllUsers);
 router.get('/:id', getUserById);

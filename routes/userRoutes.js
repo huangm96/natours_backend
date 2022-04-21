@@ -4,7 +4,14 @@ const authController = require('./../controllers/authController.js');
 
 const router = express.Router();
 
-const { signup, login, protect, restricTo } = authController;
+const {
+  signup,
+  login,
+  protect,
+  restricTo,
+  forgotPassword,
+  resetPassword,
+} = authController;
 
 const {
   getAllUsers,
@@ -16,6 +23,9 @@ const {
 
 router.post('/signup', signup);
 router.post('/login', login);
+
+router.post('/forgotPassword', forgotPassword);
+router.patch('/resetPassword/:token', resetPassword);
 
 router.get('/', protect, getAllUsers);
 router.get('/:id', getUserById);

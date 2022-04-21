@@ -61,3 +61,11 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     updatedUser,
   });
 });
+
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  await User.findByIdAndDelete(req.user._id);
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});

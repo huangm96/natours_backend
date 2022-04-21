@@ -21,6 +21,7 @@ const {
   updateUser,
   removeUserById,
   updateMe,
+  deleteMe,
 } = userController;
 
 router.post('/signup', signup);
@@ -31,6 +32,7 @@ router.patch('/resetPassword/:token', resetPassword);
 router.patch('/updateMyPassword', protect, updateMyPassword);
 
 router.patch('/updateMe', protect, updateMe);
+router.delete('/deleteMe', protect, deleteMe);
 
 router.get('/', protect, getAllUsers);
 router.get('/:id', getUserById);

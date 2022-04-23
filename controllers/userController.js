@@ -1,6 +1,5 @@
 const User = require('./../models/userModel.js');
 const catchAsync = require('./../utils/catchAsync');
-const APIFeatures = require('./../utils/apiFeatures.js');
 const AppError = require('./../utils/appError');
 
 const filterObj = (obj, ...allowedFields) => {
@@ -26,15 +25,6 @@ exports.getAllUsers = catchAsync(async (req, res) => {
   });
 });
 exports.getUserById = (req, res) => {
-  res.status(500).json({ status: 'Err', message: 'Not yet defined' });
-};
-exports.createUser = (req, res) => {
-  res.status(500).json({ status: 'Err', message: 'Not yet defined' });
-};
-exports.updateUser = (req, res) => {
-  res.status(500).json({ status: 'Err', message: 'Not yet defined' });
-};
-exports.removeUserById = (req, res) => {
   res.status(500).json({ status: 'Err', message: 'Not yet defined' });
 };
 

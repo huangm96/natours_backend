@@ -8,21 +8,12 @@ const {
   signup,
   login,
   protect,
-  restricTo,
   forgotPassword,
   resetPassword,
   updateMyPassword,
 } = authController;
 
-const {
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  removeUserById,
-  updateMe,
-  deleteMe,
-} = userController;
+const { getAllUsers, getUserById, updateMe, deleteMe } = userController;
 
 router.post('/signup', signup);
 router.post('/login', login);
@@ -36,8 +27,5 @@ router.delete('/deleteMe', protect, deleteMe);
 
 router.get('/', protect, getAllUsers);
 router.get('/:id', getUserById);
-router.post('/', createUser);
-router.patch('/:id', updateUser);
-router.delete('/:id', removeUserById);
 
 module.exports = router;

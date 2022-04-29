@@ -1,6 +1,7 @@
 const express = require('express');
 const userController = require('./../controllers/userController.js');
 const authController = require('./../controllers/authController.js');
+const validID = require('../utils/validID.js');
 
 const router = express.Router();
 
@@ -14,6 +15,8 @@ const {
 } = authController;
 
 const { getAllUsers, getUserById, updateMe, deleteMe } = userController;
+
+router.param('id', validID.checkID);
 
 router.post('/signup', signup);
 router.post('/login', login);

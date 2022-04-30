@@ -20,9 +20,14 @@ const {
 router.param('id', validID.checkID);
 
 router.get('/', TourFilter, getReviews);
-router.get('/:id', protect, getReviewById);
+
+// protect all routes after this middleware
+router.use(protect);
+
+router.get('/:id', getReviewById);
+
 router.post('/', restricTo('user'), setTourUserIds, createReview);
-router.delete('/:id', protect, restricTo('user'), deleteReview);
-router.patch('/:id', protect, restricTo('user'), updateReview);
+router.delete('/:id', restricTo('user', 'admin'), deleteReview);
+router.patch('/:id', restricTo('user', 'admin'), updateReview);
 
 module.exports = router;

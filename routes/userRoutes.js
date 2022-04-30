@@ -19,9 +19,10 @@ const {
   getAllUsers,
   getUserById,
   updateMe,
-  deleteMe,
   deleteUser,
   updateUser,
+  getMe,
+  getMyId,
 } = userController;
 
 router.param('id', validID.checkID);
@@ -31,15 +32,22 @@ router.post('/login', login);
 
 router.post('/forgotPassword', forgotPassword);
 router.patch('/resetPassword/:token', resetPassword);
-router.patch('/updateMyPassword', protect, updateMyPassword);
 
-router.patch('/updateMe', protect, updateMe);
-router.delete('/deleteMe', protect, deleteMe);
+// protect all routes after this middleware
+router.use(protect);
 
-router.get('/', protect, getAllUsers);
+router.patch('/updateMyPassword', updateMyPassword);
+
+router.get('/me', getMyId, getMe);
+router.patch('/updateMe', getMyId, updateMe, updateUser);
+router.delete('/deleteMe', getMyId, deleteUser);
 router.get('/:id', getUserById);
-router.delete('/:id', protect, restricTo('admin'), deleteUser);
+
+router.use(restricTo('admin'));
+
+router.get('/', getAllUsers);
+router.delete('/:id', deleteUser);
 // Do Not update password
-router.patch('/:id', protect, restricTo('admin'), updateUser);
+router.patch('/:id', updateUser);
 
 module.exports = router;

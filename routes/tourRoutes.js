@@ -13,7 +13,7 @@ const {
   getTourById,
   createTour,
   updateTourById,
-  removeTourById,
+  deleteTour,
 
   aliasTopTours,
   getTourStats,
@@ -32,11 +32,6 @@ router.get('/', getAllTours);
 router.get('/:id', getTourById);
 router.post('/', protect, restricTo('admin', 'lead-guide'), createTour);
 router.patch('/:id', protect, restricTo('admin', 'lead-guide'), updateTourById);
-router.delete(
-  '/:id',
-  protect,
-  restricTo('admin', 'lead-guide'),
-  removeTourById
-);
+router.delete('/:id', protect, restricTo('admin', 'lead-guide'), deleteTour);
 
 module.exports = router;

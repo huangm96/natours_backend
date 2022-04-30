@@ -12,9 +12,16 @@ const {
   forgotPassword,
   resetPassword,
   updateMyPassword,
+  restricTo,
 } = authController;
 
-const { getAllUsers, getUserById, updateMe, deleteMe } = userController;
+const {
+  getAllUsers,
+  getUserById,
+  updateMe,
+  deleteMe,
+  deleteUser,
+} = userController;
 
 router.param('id', validID.checkID);
 
@@ -30,5 +37,6 @@ router.delete('/deleteMe', protect, deleteMe);
 
 router.get('/', protect, getAllUsers);
 router.get('/:id', getUserById);
+router.delete('/:id', protect, restricTo('admin'), deleteUser);
 
 module.exports = router;

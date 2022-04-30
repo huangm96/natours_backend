@@ -7,11 +7,11 @@ const router = express.Router({ mergeParams: true });
 
 const { protect, restricTo } = authController;
 
-const { getReviews, createReview } = reviewController;
+const { getReviews, createReview, deleteReview } = reviewController;
 
 router.param('id', validID.checkID);
 
 router.get('/', getReviews);
 router.post('/', protect, restricTo('user'), createReview);
-
+router.delete('/:id', protect, restricTo('user'), deleteReview);
 module.exports = router;

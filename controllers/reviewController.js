@@ -3,6 +3,7 @@ const Tour = require('./../models/tourModel.js');
 const User = require('./../models/userModel.js');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const factory = require('./handlerFactory');
 
 exports.getReviews = catchAsync(async (req, res, next) => {
   if (!req.params.id) {
@@ -50,3 +51,5 @@ exports.createReview = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.deleteReview = factory.deleteOne(Review);

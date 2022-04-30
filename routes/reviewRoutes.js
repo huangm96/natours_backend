@@ -7,11 +7,22 @@ const router = express.Router({ mergeParams: true });
 
 const { protect, restricTo } = authController;
 
-const { getReviews, createReview, deleteReview } = reviewController;
+const {
+  getReviews,
+  createReview,
+  deleteReview,
+  updateReview,
+  setTourUserIds,
+  getReviewById,
+  TourFilter,
+} = reviewController;
 
 router.param('id', validID.checkID);
 
-router.get('/', getReviews);
-router.post('/', protect, restricTo('user'), createReview);
+router.get('/', TourFilter, getReviews);
+router.get('/:id', protect, getReviewById);
+router.post('/', restricTo('user'), setTourUserIds, createReview);
 router.delete('/:id', protect, restricTo('user'), deleteReview);
+router.patch('/:id', protect, restricTo('user'), updateReview);
+
 module.exports = router;

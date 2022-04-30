@@ -21,6 +21,7 @@ const {
   updateMe,
   deleteMe,
   deleteUser,
+  updateUser,
 } = userController;
 
 router.param('id', validID.checkID);
@@ -38,5 +39,7 @@ router.delete('/deleteMe', protect, deleteMe);
 router.get('/', protect, getAllUsers);
 router.get('/:id', getUserById);
 router.delete('/:id', protect, restricTo('admin'), deleteUser);
+// Do Not update password
+router.patch('/:id', protect, restricTo('admin'), updateUser);
 
 module.exports = router;

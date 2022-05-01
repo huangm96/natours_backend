@@ -1,20 +1,16 @@
 const mongoose = require('mongoose');
+const Tour = require('./tourModel');
 
 const reviewSchema = new mongoose.Schema(
   {
     review: {
       type: String,
-      required: [true, 'Review can not be empty.'],
+      required: [true, "Review can't be empty"],
       trim: true,
-      maxLength: [
-        1000,
-        'A review must have less or equal than 1000 characters',
-      ],
-      minlength: [5, 'A review must have more or equal than 5 characters'],
     },
     rating: {
       type: Number,
-      default: 5,
+      default: 4.5,
       min: [1, 'Rating must be above 1.0'],
       max: [5, 'Rating must be below 5.0'],
     },
@@ -30,11 +26,11 @@ const reviewSchema = new mongoose.Schema(
       required: [true, 'Review must belong to a user.'],
     },
   },
-  {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
-  }
+  { toJSON: { virtuals: true }, toObjects: { virtuals: true } }
 );
+
+//preventing user writes  duplicate reviews
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
 
 reviewSchema.pre(/^find/, function (next) {
   this.populate({
@@ -42,6 +38,50 @@ reviewSchema.pre(/^find/, function (next) {
     select: 'name photo',
   });
   next();
+});
+
+reviewSchema.statics.calcAverageRatings = async function (tourId) {
+  //"this" points to the Model
+  const stats = await this.aggregate([
+    {
+      $match: { tour: tourId },
+    },
+    {
+      $group: {
+        _id: '$tour',
+        nRating: { $sum: 1 },
+        avgRating: { $avg: '$rating' },
+      },
+    },
+  ]);
+  //   console.log(stats);
+  if (stats.length > 0) {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].avgRating,
+    });
+  } else {
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: 0,
+      ratingsAverage: 0,
+    });
+  }
+};
+
+reviewSchema.post('save', function (doc) {
+  // "this.constructor or doc.constructor points to the Model"
+  // Review.calcAverageRatings
+  // "this" points to current review
+  //   console.log(doc);
+  doc.constructor.calcAverageRatings(this.tour);
+});
+
+// findOneAndUpdate and findOneAndDelete
+reviewSchema.post(/^findOneAnd/, async function (doc) {
+  //console.log(doc);
+  if (doc) {
+    await doc.constructor.calcAverageRatings(doc.tour);
+  }
 });
 
 const Review = mongoose.model('Review', reviewSchema);

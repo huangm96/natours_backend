@@ -18,6 +18,8 @@ const {
   aliasTopTours,
   getTourStats,
   getMonthlyPlan,
+  getToursWithin,
+  getDistances,
 } = tourController;
 
 router.param('id', validID.checkID);
@@ -29,6 +31,9 @@ router.get(
   restricTo('admin', 'lead-guide', 'guide'),
   getMonthlyPlan
 );
+
+router.get('/distances/:latlng/unit/:unit', getDistances);
+router.get('/tours-within/:distance/center/:latlng/unit/:unit', getToursWithin);
 
 // mounting router
 router.use('/:id/reviews', reviewRouter);

@@ -1,7 +1,7 @@
 const Tour = require('./../models/tourModel.js');
 const catchAsync = require('./../utils/catchAsync');
 // const APIFeatures = require('./../utils/apiFeatures.js');
-// const AppError = require('./../utils/appError');
+const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 
 exports.aliasTopTours = (req, res, next) => {
@@ -75,6 +75,72 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
       year,
       plan,
     },
+  });
+});
+
+//'/tours-within/:distance/center/:latlng/unit/:unit'
+//'/tours-within/250/center/-40,45/unit/mi'
+exports.getToursWithin = catchAsync(async (req, res, next) => {
+  const { distance, latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(',');
+
+  // divide our distance by the radius of the earth.
+  const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
+
+  if (!lat || !lng) {
+    return next(
+      new AppError(
+        'Please provide latitude and longitude in the format lat,lng',
+        400
+      )
+    );
+  }
+  const tours = await Tour.find({
+    startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
+  });
+  res.status(200).json({
+    status: 'Success',
+    results: tours.length,
+    data: { tours },
+  });
+});
+
+///distances/:latlng/unit/:unit
+exports.getDistances = catchAsync(async (req, res, next) => {
+  const { latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(',');
+  const multiplier = unit === 'mi' ? 0.000621371 : 0.001;
+  if (!lat || !lng) {
+    return next(
+      new AppError(
+        'Please provide latitude and longitude in the format lat,lng',
+        400
+      )
+    );
+  }
+  const distances = await Tour.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [lng * 1, lat * 1],
+        },
+        distanceField: 'distance',
+        distanceMultiplier: multiplier,
+      },
+    },
+    {
+      //project: the fields that we want to keep
+      $project: {
+        distance: 1,
+        name: 1,
+      },
+    },
+  ]);
+  res.status(200).json({
+    status: 'Success',
+    results: distances.length,
+    data: { distances },
   });
 });
 

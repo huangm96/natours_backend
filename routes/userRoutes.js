@@ -2,7 +2,7 @@ const express = require('express');
 const userController = require('./../controllers/userController.js');
 const authController = require('./../controllers/authController.js');
 const validID = require('../utils/validID.js');
-
+const photoController = require('./../controllers/photoController.js');
 const router = express.Router();
 
 const {
@@ -25,6 +25,8 @@ const {
   getMyId,
 } = userController;
 
+const { uploadUserPhoto, updateUserAvatar } = photoController;
+
 router.param('id', validID.checkID);
 
 router.post('/signup', signup);
@@ -39,7 +41,14 @@ router.use(protect);
 router.patch('/updateMyPassword', updateMyPassword);
 
 router.get('/me', getMyId, getMe);
-router.patch('/updateMe', getMyId, updateMe, updateUser);
+router.patch(
+  '/updateMe',
+  getMyId,
+  uploadUserPhoto,
+  updateUserAvatar,
+  updateMe,
+  updateUser
+);
 router.delete('/deleteMe', getMyId, deleteUser);
 router.get('/:id', getUserById);
 

@@ -19,9 +19,9 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       validate: [validator.isEmail, 'Please provide a valid email'],
     },
-    photo: {
-      type: String,
-      default: 'default.jpg',
+    avatar: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Avatar',
     },
     role: {
       type: String,
@@ -90,7 +90,13 @@ userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } });
   next();
 });
-
+userSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'avatar',
+    // select: 'name email',
+  });
+  next();
+});
 userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword

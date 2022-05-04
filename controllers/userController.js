@@ -2,6 +2,7 @@ const User = require('./../models/userModel.js');
 // const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
+const fs = require('fs');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -27,7 +28,8 @@ exports.updateMe = (req, res, next) => {
     );
   }
   // 2. Filtered out unwanted fields names that are not allowed to be updated.
-  const filteredBody = filterObj(req.body, 'name', 'email');
+  const filteredBody = filterObj(req.body, 'name', 'email', 'avatar');
+
   req.body = filteredBody;
   next();
 };
@@ -35,5 +37,5 @@ exports.updateMe = (req, res, next) => {
 exports.getAllUsers = factory.getAll(User);
 exports.deleteUser = factory.deleteOne(User);
 exports.updateUser = factory.updateOne(User);
-exports.getUserById = factory.getOne(User, '', ['name', 'photo']);
-exports.getMe = factory.getOne(User, '', ['name', 'email', 'photo']);
+exports.getUserById = factory.getOne(User, '', ['name', 'avatar']);
+exports.getMe = factory.getOne(User, '', ['name', 'email', 'avatar']);

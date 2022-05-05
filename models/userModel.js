@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Avatar',
+      ref: 'Photo',
     },
     role: {
       type: String,
@@ -90,10 +90,12 @@ userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } });
   next();
 });
+
+// retrieve avatar from avatar DB when finding the user
 userSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'avatar',
-    // select: 'name email',
+    select: '-createdAt',
   });
   next();
 });
@@ -123,7 +125,7 @@ userSchema.methods.createPasswordResetToken = function () {
     .update(resetToken)
     .digest('hex');
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000; //10 mins
-  console.log({ resetToken }, this.passwordResetToken);
+  // console.log({ resetToken }, this.passwordResetToken);
   return resetToken;
 };
 

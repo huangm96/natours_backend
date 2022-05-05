@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const avatarSchema = new mongoose.Schema(
+const photoSchema = new mongoose.Schema(
   {
     filename: {
       type: String,
@@ -21,6 +21,6 @@ const avatarSchema = new mongoose.Schema(
   { toJSON: { virtuals: true }, toObjects: { virtuals: true } }
 );
 
-const Avatar = mongoose.model('Avatar', avatarSchema);
+const Photo = mongoose.model('Photo', photoSchema);
 
-module.exports = Avatar;
+module.exports = Photo;

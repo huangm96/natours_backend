@@ -31,6 +31,7 @@ exports.updateMe = (req, res, next) => {
   const filteredBody = filterObj(req.body, 'name', 'email', 'avatar');
 
   req.body = filteredBody;
+
   next();
 };
 

@@ -25,7 +25,7 @@ const {
   getMyId,
 } = userController;
 
-const { uploadUserPhoto, updateUserAvatar } = photoController;
+const { resizeUserPhoto, uploadUserPhoto, updateUserAvatar } = photoController;
 
 router.param('id', validID.checkID);
 
@@ -45,6 +45,7 @@ router.patch(
   '/updateMe',
   getMyId,
   uploadUserPhoto,
+  resizeUserPhoto,
   updateUserAvatar,
   updateMe,
   updateUser

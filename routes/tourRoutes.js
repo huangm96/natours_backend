@@ -9,6 +9,8 @@ const router = express.Router();
 const { protect, restricTo } = authController;
 
 const {
+  resizeTourImages,
+  uploadTourImages,
   getAllTours,
   getTourById,
   createTour,
@@ -43,7 +45,7 @@ router.get('/:id', getTourById);
 
 router.use(protect, restricTo('admin', 'lead-guide'));
 router.post('/', createTour);
-router.patch('/:id', updateTourById);
+router.patch('/:id', uploadTourImages, resizeTourImages, updateTourById);
 router.delete('/:id', deleteTour);
 
 module.exports = router;

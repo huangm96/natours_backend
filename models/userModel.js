@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Photo',
+      ref: 'UserPhoto',
     },
     role: {
       type: String,

@@ -2,7 +2,7 @@ const express = require('express');
 const userController = require('./../controllers/userController.js');
 const authController = require('./../controllers/authController.js');
 const validID = require('../utils/validID.js');
-const photoController = require('./../controllers/photoController.js');
+const userPhotoController = require('./../controllers/userPhotoController.js');
 const router = express.Router();
 
 const {
@@ -25,7 +25,11 @@ const {
   getMyId,
 } = userController;
 
-const { resizeUserPhoto, uploadUserPhoto, updateUserAvatar } = photoController;
+const {
+  resizeUserPhoto,
+  uploadUserPhoto,
+  updateUserAvatar,
+} = userPhotoController;
 
 router.param('id', validID.checkID);
 

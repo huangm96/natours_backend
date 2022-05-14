@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const Photo = require('../models/photoModel.js');
-const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError');
+const UserPhoto = require('../models/userPhotoModel.js');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 const multer = require('multer');
 const { GridFsStorage } = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
@@ -60,7 +60,7 @@ exports.updateUserAvatar = catchAsync(async (req, res, next) => {
     user = req.user.id;
     img = req.file.buffer;
     let updateAvatar;
-    updateAvatar = await Photo.findOneAndUpdate(
+    updateAvatar = await UserPhoto.findOneAndUpdate(
       { user: req.user.id },
       { filename, contentType, user, img },
       {
@@ -68,7 +68,12 @@ exports.updateUserAvatar = catchAsync(async (req, res, next) => {
       }
     );
     if (!updateAvatar) {
-      updateAvatar = await Photo.create({ filename, contentType, user, img });
+      updateAvatar = await UserPhoto.create({
+        filename,
+        contentType,
+        user,
+        img,
+      });
     }
 
     req.body.avatar = updateAvatar.id;

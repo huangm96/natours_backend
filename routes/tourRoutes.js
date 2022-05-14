@@ -45,7 +45,7 @@ router.get('/:id', getTourById);
 
 router.use(protect, restricTo('admin', 'lead-guide'));
 router.post('/', createTour);
-router.patch('/:id', uploadTourImages, resizeTourImages, updateTourById);
+router.patch('/:id', updateTourById);
 router.delete('/:id', deleteTour);
 
 module.exports = router;

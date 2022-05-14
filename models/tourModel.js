@@ -58,13 +58,13 @@ const tourSchema = new mongoose.Schema(
     },
     imageCover: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Photo',
+      ref: 'TourPhoto',
     },
 
     images: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: 'Photo',
+        ref: 'TourPhoto',
       },
     ],
     createdAt: { type: Date, default: Date.now(), select: false },
@@ -109,7 +109,7 @@ const tourSchema = new mongoose.Schema(
 
 tourSchema.index({ price: 1, ratingAverage: -1 });
 tourSchema.index({ slug: 1 });
-tourSchema.index({ startLocation: '2dsphere' });
+// tourSchema.index({ startLocation: '2dsphere' });
 
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
@@ -147,7 +147,22 @@ tourSchema.pre(/^find/, function (next) {
   });
   next();
 });
-
+// retrieve tour photo from tourPhoto DB when finding the tour
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'images',
+    select: '-createdAt',
+  });
+  next();
+});
+// retrieve tour cover photo from tourPhoto DB when finding the tour
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'imageCover',
+    select: '-createdAt',
+  });
+  next();
+});
 // aggregation middleware
 // tourSchema.pre('aggregate', function (next) {
 //   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });

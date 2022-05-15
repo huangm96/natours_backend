@@ -1,6 +1,8 @@
 const express = require('express');
 const tourController = require('../controllers/tourController.js');
 const authController = require('../controllers/authController.js');
+const tourPhotoController = require('./../controllers/tourPhotoController.js');
+
 const reviewRouter = require('./reviewRoutes.js');
 
 const validID = require('../utils/validID.js');
@@ -9,8 +11,6 @@ const router = express.Router();
 const { protect, restricTo } = authController;
 
 const {
-  resizeTourImages,
-  uploadTourImages,
   getAllTours,
   getTourById,
   createTour,
@@ -23,6 +23,12 @@ const {
   getToursWithin,
   getDistances,
 } = tourController;
+
+const {
+  uploadTourImages,
+  resizeTourImages,
+  updateTourImages,
+} = tourPhotoController;
 
 router.param('id', validID.checkID);
 router.get('/top-5-cheap', aliasTopTours, getAllTours);
@@ -45,7 +51,13 @@ router.get('/:id', getTourById);
 
 router.use(protect, restricTo('admin', 'lead-guide'));
 router.post('/', createTour);
-router.patch('/:id', updateTourById);
+router.patch(
+  '/:id',
+  uploadTourImages,
+  resizeTourImages,
+  updateTourImages,
+  updateTourById
+);
 router.delete('/:id', deleteTour);
 
 module.exports = router;

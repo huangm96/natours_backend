@@ -1,14 +1,11 @@
 const TourPhoto = require('../models/tourPhotoModel.js');
+const Tour = require('../models/tourModel.js');
+
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const multer = require('multer');
 
 const sharp = require('sharp');
-
-exports.uploadTourImages = upload.fields([
-  { name: 'imageCover', maxCount: 1 },
-  { name: 'images', maxCount: 3 },
-]);
 
 const multerStorage = multer.memoryStorage();
 const multerFilter = (req, file, cb) => {
@@ -19,13 +16,19 @@ const multerFilter = (req, file, cb) => {
     cb(new AppError('Not an image! Please upload only images', 404), false);
   }
 };
+
 const upload = multer({
   storage: multerStorage,
   fileFilter: multerFilter,
 });
 
+exports.uploadTourImages = upload.fields([
+  { name: 'imageCover', maxCount: 1 },
+  { name: 'images', maxCount: 3 },
+]);
+
 exports.resizeTourImages = catchAsync(async (req, res, next) => {
-  console.log(req.files);
+  //   console.log(req.files);
   // 1.Cover image
   if (req.files.imageCover) {
     const imageCoverFilename = `tour-${req.params.id}-${Date.now()}.jpeg`;
@@ -33,19 +36,54 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
       .resize(2000, 1333)
       .toFormat('jpeg')
       .jpeg({ quality: 90 });
-    console.log();
+    req.files.imageCover[0].filename = imageCoverFilename;
   }
   // 2. uploadTourImages
-  req.body.images = [];
-  await Promise.all(
-    req.files.images.map(async (file, i) => {
-      const filename = `tour-${req.params.id}-${Date.now()}.jpeg`;
-      await sharp(file.buffer)
-        .resize(2000, 1333)
-        .toFormat('jpeg')
-        .jpeg({ quality: 90 });
-      req.body.images.push(filename);
-    })
-  );
+  if (req.files.images) {
+    await Promise.all(
+      req.files.images.map(async (file, i) => {
+        const filename = `tour-${req.params.id}-${Date.now()}.jpeg`;
+        await sharp(file.buffer)
+          .resize(2000, 1333)
+          .toFormat('jpeg')
+          .jpeg({ quality: 90 });
+        file.filename = filename;
+      })
+    );
+  }
+
+  next();
+});
+exports.updateTourImages = catchAsync(async (req, res, next) => {
+  console.log(req.files);
+  if (req.files.imageCover) {
+    filename = req.files.imageCover[0].filename;
+    contentType = req.files.imageCover[0].mimetype;
+    tour = req.params.id;
+    img = req.files.imageCover[0].buffer;
+    //   if tour already has an image cover, we need to update the image cover.
+    let updateTourImageCover;
+    tour = await Tour.findById(req.params.id);
+    if (tour.imageCover) {
+      updateTourImageCover = await TourPhoto.findOneAndUpdate(
+        tour.imageCover,
+        { filename, contentType, tour, img },
+        {
+          new: true,
+        }
+      );
+      // else, we are going to create the image cover
+    } else {
+      updateTourImageCover = await TourPhoto.create({
+        filename,
+        contentType,
+        tour,
+        img,
+      });
+    }
+    req.body.imageCover = updateTourImageCover.id;
+    console.log(req.body.imageCover);
+  }
+
   next();
 });

@@ -1,5 +1,6 @@
 const TourPhoto = require('../models/tourPhotoModel.js');
 const Tour = require('../models/tourModel.js');
+const factory = require('./handlerFactory');
 
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -28,7 +29,9 @@ exports.uploadTourImages = upload.fields([
 ]);
 
 exports.resizeTourImages = catchAsync(async (req, res, next) => {
-  //   console.log(req.files);
+  if (!req.files) {
+    return next();
+  }
   // 1.Cover image
   if (req.files.imageCover) {
     const imageCoverFilename = `tour-${req.params.id}-${Date.now()}.jpeg`;
@@ -39,23 +42,27 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
     req.files.imageCover[0].filename = imageCoverFilename;
   }
   // 2. uploadTourImages
+  let tourResizedImages = [];
   if (req.files.images) {
     await Promise.all(
       req.files.images.map(async (file, i) => {
-        const filename = `tour-${req.params.id}-${Date.now()}.jpeg`;
+        const filename = `tour-${req.params.id}-${Date.now()}-${i}.jpeg`;
         await sharp(file.buffer)
           .resize(2000, 1333)
           .toFormat('jpeg')
           .jpeg({ quality: 90 });
         file.filename = filename;
+        tourResizedImages.push(file);
       })
     );
   }
-
+  req.files.images = tourResizedImages;
   next();
 });
 exports.updateTourImages = catchAsync(async (req, res, next) => {
-  console.log(req.files);
+  if (!req.files) {
+    return next();
+  }
   if (req.files.imageCover) {
     filename = req.files.imageCover[0].filename;
     contentType = req.files.imageCover[0].mimetype;
@@ -82,8 +89,27 @@ exports.updateTourImages = catchAsync(async (req, res, next) => {
       });
     }
     req.body.imageCover = updateTourImageCover.id;
-    console.log(req.body.imageCover);
+  }
+  req.body.images = [];
+  if (req.files.images) {
+    await Promise.all(
+      req.files.images.map(async (file) => {
+        filename = file.filename;
+        contentType = file.mimetype;
+        tour = req.params.id;
+        img = file.buffer;
+        newImage = await TourPhoto.create({
+          filename,
+          contentType,
+          tour,
+          img,
+        });
+        req.body.images.push(newImage.id);
+      })
+    );
   }
 
   next();
 });
+
+exports.deleteTourPhoto = factory.deleteOne(TourPhoto);

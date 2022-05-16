@@ -1,12 +1,30 @@
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const APIFeatures = require('./../utils/apiFeatures.js');
+const TourPhoto = require('../models/tourPhotoModel.js');
+const UserPhoto = require('../models/userPhotoModel.js');
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.findByIdAndDelete(req.params.id);
     if (!doc) {
       return next(new AppError('No document found with that id', 404));
+    }
+    // Delete images if we need to delete Tour
+    if (doc.images || doc.imageCover) {
+      if (doc.imageCover) {
+        await TourPhoto.findByIdAndDelete(doc.imageCover.id);
+      }
+      if (doc.images) {
+        Promise.all(
+          doc.images.map(async (image) => {
+            await TourPhoto.findByIdAndDelete(image.id);
+          })
+        );
+      }
+    } // Delete avatar if we need to delete User
+    if (doc.avatar) {
+      await UserPhoto.findByIdAndDelete(doc.avatar.id);
     }
     res.status(204).send({
       status: 'Success',

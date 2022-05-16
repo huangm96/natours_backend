@@ -50,7 +50,13 @@ router.get('/', getAllTours);
 router.get('/:id', getTourById);
 
 router.use(protect, restricTo('admin', 'lead-guide'));
-router.post('/', createTour);
+router.post(
+  '/',
+  uploadTourImages,
+  resizeTourImages,
+  updateTourImages,
+  createTour
+);
 router.patch(
   '/:id',
   uploadTourImages,

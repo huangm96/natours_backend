@@ -144,26 +144,26 @@ tourSchema.pre(/^find/, function (next) {
 tourSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'guides',
-    select: 'name email',
+    select: '-passwordChangedAt',
   });
   next();
 });
-// retrieve tour photo from tourPhoto DB when finding the tour
-tourSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'images',
-    select: '-createdAt',
-  });
-  next();
-});
-// retrieve tour cover photo from tourPhoto DB when finding the tour
-tourSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'imageCover',
-    select: '-createdAt',
-  });
-  next();
-});
+// // retrieve tour photo from tourPhoto DB when finding the tour
+// tourSchema.pre('findOne', function (next) {
+//   this.populate({
+//     path: 'images',
+//     select: '-createdAt',
+//   });
+//   next();
+// });
+// // retrieve tour cover photo from tourPhoto DB when finding the tour
+// tourSchema.pre(/^findById/, function (next) {
+//   this.populate({
+//     path: 'imageCover',
+//     select: '-createdAt',
+//   });
+//   next();
+// });
 // aggregation middleware
 // tourSchema.pre('aggregate', function (next) {
 //   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });

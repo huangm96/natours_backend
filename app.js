@@ -13,19 +13,20 @@ const tourRouter = require('./routes/tourRoutes.js');
 const userRouter = require('./routes/userRoutes.js');
 const reviewRouter = require('./routes/reviewRoutes.js');
 const bookingRouter = require('./routes/bookingRoutes.js');
-
+const tourPhotoRouter = require('./routes/tourPhotoRoutes.js');
 const app = express();
 
 // global middleware
 // set security Http headers
-app.use(helmet());
 app.use(cors());
+app.use(helmet());
+
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 // limit requests from same ip address
 const limiter = rateLimit({
-  max: 100,
+  max: 1000,
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP, please try again in an hour.',
 });
@@ -72,7 +73,7 @@ app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
-
+app.use('/api/v1/tourPhotos', tourPhotoRouter);
 // If the route cannot be catched from the above functions, it will be catched by the below function
 app.all('*', (req, res, next) => {
   // const err = new Error(`Can't find ${req.originalUrl} on this server!`);

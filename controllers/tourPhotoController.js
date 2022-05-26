@@ -113,3 +113,4 @@ exports.updateTourImages = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteTourPhoto = factory.deleteOne(TourPhoto);
+exports.getTourPhotoById = factory.getOne(TourPhoto);

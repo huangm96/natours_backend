@@ -38,7 +38,7 @@ router.post('/login', login);
 
 router.post('/forgotPassword', forgotPassword);
 router.patch('/resetPassword/:token', resetPassword);
-
+router.get('/:id', getUserById);
 // protect all routes after this middleware
 router.use(protect);
 
@@ -55,7 +55,6 @@ router.patch(
   updateUser
 );
 router.delete('/deleteMe', getMyId, deleteUser);
-router.get('/:id', getUserById);
 
 router.use(restricTo('admin'));
 

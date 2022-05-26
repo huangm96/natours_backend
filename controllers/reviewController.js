@@ -14,7 +14,7 @@ exports.TourFilter = async (req, res, next) => {
     return next(new AppError('No tour found with that id', 404));
   }
 
-  req.filter = { tour: req.params.id };
+  req.filterOptions = { tour: req.params.id };
   next();
 };
 

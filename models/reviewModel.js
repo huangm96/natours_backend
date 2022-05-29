@@ -10,7 +10,7 @@ const reviewSchema = new mongoose.Schema(
     },
     rating: {
       type: Number,
-      default: 4.5,
+      required: [true, "Rating can't be empty"],
       min: [1, 'Rating must be above 1.0'],
       max: [5, 'Rating must be below 5.0'],
     },

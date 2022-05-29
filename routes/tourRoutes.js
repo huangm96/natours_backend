@@ -54,6 +54,7 @@ router.post(
   '/',
   uploadTourImages,
   resizeTourImages,
+
   updateTourImages,
   createTour
 );
@@ -61,6 +62,7 @@ router.patch(
   '/:id',
   uploadTourImages,
   resizeTourImages,
+
   updateTourImages,
   updateTourById
 );

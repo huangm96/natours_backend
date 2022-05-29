@@ -36,7 +36,7 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
   if (req.files.imageCover) {
     const imageCoverFilename = `tour-${req.params.id}-${Date.now()}.jpeg`;
     await sharp(req.files.imageCover[0].buffer)
-      .resize(2000, 1333)
+      .resize(300, 200)
       .toFormat('jpeg')
       .jpeg({ quality: 90 });
     req.files.imageCover[0].filename = imageCoverFilename;
@@ -48,9 +48,9 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
       req.files.images.map(async (file, i) => {
         const filename = `tour-${req.params.id}-${Date.now()}-${i}.jpeg`;
         await sharp(file.buffer)
-          .resize(2000, 1333)
+          .resize(300, 200)
           .toFormat('jpeg')
-          .jpeg({ quality: 90 });
+          .jpeg({ quality: 50 });
         file.filename = filename;
         tourResizedImages.push(file);
       })
@@ -63,22 +63,32 @@ exports.updateTourImages = catchAsync(async (req, res, next) => {
   if (!req.files) {
     return next();
   }
+  const tour = await Tour.findById(req.params.id);
   if (req.files.imageCover) {
-    filename = req.files.imageCover[0].filename;
-    contentType = req.files.imageCover[0].mimetype;
-    tour = req.params.id;
-    img = req.files.imageCover[0].buffer;
+    let filename = req.files.imageCover[0].filename;
+    let contentType = req.files.imageCover[0].mimetype;
+    let tourId = req.params.id;
+    let img = req.files.imageCover[0].buffer;
     //   if tour already has an image cover, we need to update the image cover.
     let updateTourImageCover;
-    tour = await Tour.findById(req.params.id);
+
     if (tour.imageCover) {
       updateTourImageCover = await TourPhoto.findOneAndUpdate(
         tour.imageCover,
-        { filename, contentType, tour, img },
+        { filename, contentType, tour: tourId, img },
         {
           new: true,
         }
       );
+      // If the image is missing, updateTourImageCover will equal to null, so we need to create the image
+      if (!updateTourImageCover) {
+        updateTourImageCover = await TourPhoto.create({
+          filename,
+          contentType,
+          tour,
+          img,
+        });
+      }
       // else, we are going to create the image cover
     } else {
       updateTourImageCover = await TourPhoto.create({
@@ -88,27 +98,28 @@ exports.updateTourImages = catchAsync(async (req, res, next) => {
         img,
       });
     }
+
     req.body.imageCover = updateTourImageCover.id;
   }
-  req.body.images = [];
   if (req.files.images) {
+    req.body.images = tour.images;
+
     await Promise.all(
       req.files.images.map(async (file) => {
-        filename = file.filename;
-        contentType = file.mimetype;
-        tour = req.params.id;
-        img = file.buffer;
-        newImage = await TourPhoto.create({
+        let filename = file.filename;
+        let contentType = file.mimetype;
+        let tourId = req.params.id;
+        let img = file.buffer;
+        const newImage = await TourPhoto.create({
           filename,
           contentType,
-          tour,
+          tour: tourId,
           img,
         });
         req.body.images.push(newImage.id);
       })
     );
   }
-
   next();
 });
 

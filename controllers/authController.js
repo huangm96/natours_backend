@@ -69,6 +69,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1. getting token and check of it's there
+
   let token;
   if (
     req.headers.authorization &&
@@ -103,6 +104,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // Grant access to protected route
   req.user = currentUser;
+
   next();
 });
 

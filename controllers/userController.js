@@ -39,4 +39,4 @@ exports.getAllUsers = factory.getAll(User);
 exports.deleteUser = factory.deleteOne(User);
 exports.updateUser = factory.updateOne(User);
 exports.getUserById = factory.getOne(User, '', ['name', 'avatar', 'role']);
-exports.getMe = factory.getOne(User, '', ['name', 'email', 'avatar']);
+exports.getMe = factory.getOne(User);

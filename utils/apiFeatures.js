@@ -3,6 +3,7 @@ class APIFeatures {
     this.query = query;
     this.queryString = queryString;
   }
+
   filter() {
     // 1A Filtering
     //?price=500&ratingsAverage=4.5

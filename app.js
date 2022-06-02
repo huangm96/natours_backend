@@ -14,6 +14,7 @@ const userRouter = require('./routes/userRoutes.js');
 const reviewRouter = require('./routes/reviewRoutes.js');
 const bookingRouter = require('./routes/bookingRoutes.js');
 const tourPhotoRouter = require('./routes/tourPhotoRoutes.js');
+const { webhookCheckout } = require('./controllers/bookingController');
 const app = express();
 
 // global middleware
@@ -31,7 +32,12 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP, please try again in an hour.',
 });
 app.use('/api', limiter);
-
+//
+app.post(
+  '/webhook',
+  express.raw({ type: 'application/json' }),
+  webhookCheckout
+);
 // built-in middleware, it parses incoming requests with JSON
 app.use(express.json({ limit: '10kb' }));
 

@@ -54,19 +54,10 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
   }
 
   // Handle the event
-  switch (event.type) {
-    case 'payment_intent.succeeded':
-      const paymentIntent = event.data.object;
-      console.log('paymentIntent', paymentIntent);
-      // Then define and call a function to handle the event payment_intent.succeeded
-      break;
-    // ... handle other event types
-    case 'checkout.session.completed':
-      createBookingCheckout(event.data.object);
-      // Then define and call a function to handle the event payment_intent.succeeded
-      break;
-    default:
-      console.log(`Unhandled event type ${event.type}`);
+  if (event.type === 'checkout.session.completed') {
+    createBookingCheckout(event.data.object);
+  } else {
+    console.log(`Unhandled event type ${event.type}`);
   }
 
   // Return a 200 response to acknowledge receipt of the event

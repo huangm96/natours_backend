@@ -1,4 +1,5 @@
 const Tour = require('./../models/tourModel.js');
+const User = require('./../models/userModel.js');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
@@ -37,8 +38,11 @@ exports.UserFilter = (req, res, next) => {
   next();
 };
 const createBookingCheckout = async (session) => {
-  console.log('session', session);
-  await Booking.create({});
+  const tour = session.client_reference_id;
+  const user = (await User.findOne({ email: session.customer_email })).id;
+  const price = session.line_items[0].amount;
+  const tourStartDate = session.metadata.tourStartDate;
+  await Booking.create({ tour, user, price, tourStartDate });
 };
 exports.webhookCheckout = catchAsync(async (req, res, next) => {
   console.log('here');

@@ -149,14 +149,14 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 // // retrieve tour photo from tourPhoto DB when finding the tour
-// tourSchema.pre('findOne', function (next) {
-//   this.populate({
-//     path: 'images',
-//     select: '-createdAt',
-//   });
-//   next();
-// });
-// // retrieve tour cover photo from tourPhoto DB when finding the tour
+tourSchema.pre('findOne', function (next) {
+  this.populate({
+    path: 'imageCover',
+    select: '-createdAt',
+  });
+  next();
+});
+// retrieve tour cover photo from tourPhoto DB when finding the tour
 // tourSchema.pre(/^findById/, function (next) {
 //   this.populate({
 //     path: 'imageCover',

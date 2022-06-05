@@ -22,6 +22,13 @@ const bookingSchema = new mongoose.Schema(
       min: [0, 'price must be above 0'],
       required: [true, 'Booking must have a price.'],
     },
+    sessionId: {
+      type: String,
+    },
+    quantity: {
+      type: Number,
+      required: [true, 'Booking must have a quantity.'],
+    },
     paid: {
       type: Boolean,
       default: true,
@@ -30,7 +37,10 @@ const bookingSchema = new mongoose.Schema(
   { toJSON: { virtuals: true }, toObjects: { virtuals: true } }
 );
 bookingSchema.pre(/^find/, function (next) {
-  this.populate('user').populate({ path: 'tour', select: 'name' });
+  this.populate('user').populate({
+    path: 'tour',
+    select: 'name startLocation duration imageCover price',
+  });
   next();
 });
 const Booking = mongoose.model('Booking', bookingSchema);

@@ -4,6 +4,7 @@ const authController = require('../controllers/authController.js');
 const tourPhotoController = require('./../controllers/tourPhotoController.js');
 
 const reviewRouter = require('./reviewRoutes.js');
+const bookingRouter = require('./bookingRoutes.js');
 
 const validID = require('../utils/validID.js');
 const router = express.Router();
@@ -45,6 +46,7 @@ router.get('/tours-within/:distance/center/:latlng/unit/:unit', getToursWithin);
 
 // mounting router
 router.use('/:id/reviews', reviewRouter);
+router.use('/:id/bookings', bookingRouter);
 
 router.get('/', getAllTours);
 router.get('/:id', getTourById);

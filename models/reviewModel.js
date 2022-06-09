@@ -41,7 +41,13 @@ reviewSchema.pre(/^find/, function (next) {
   });
   next();
 });
-
+reviewSchema.pre('save', function (next) {
+  this.populate({
+    path: 'user',
+    select: 'name avatar',
+  });
+  next();
+});
 reviewSchema.statics.calcAverageRatings = async function (tourId) {
   //"this" points to the Model
   const stats = await this.aggregate([

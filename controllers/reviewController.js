@@ -17,7 +17,14 @@ exports.TourFilter = async (req, res, next) => {
   req.filterOptions = { tour: req.params.id };
   next();
 };
+exports.UserFilter = async (req, res, next) => {
+  if (!req.user || !req.user.id) {
+    return next(new AppError('Need user Id to find the reviews', 404));
+  }
 
+  req.filterOptions = { user: req.user.id };
+  next();
+};
 exports.setTourUserIds = async (req, res, next) => {
   if (!req.body.tour) {
     req.body.tour = req.params.id;

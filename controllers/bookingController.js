@@ -59,21 +59,6 @@ const createBookingCheckout = async (session) => {
     quantity,
   });
 };
-exports.webhookCheckoutMiddleware = (req, res, next) => {
-  var data_stream = '';
-
-  // Readable streams emit 'data' events once a listener is added
-  req
-    .setEncoding('utf-8')
-    .on('data', function (data) {
-      data_stream += data;
-    })
-    .on('end', function () {
-      req.rawBody;
-      req.rawBody = data_stream;
-      next();
-    });
-};
 
 exports.webhookCheckout = catchAsync(async (req, res, next) => {
   const sig = req.headers['stripe-signature'];
@@ -81,7 +66,7 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(req.rawBody, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (err) {
     console.log(err);
     res.status(400).send(`Webhook Error: ${err.message}`);

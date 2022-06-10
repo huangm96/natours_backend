@@ -14,10 +14,7 @@ const userRouter = require('./routes/userRoutes.js');
 const reviewRouter = require('./routes/reviewRoutes.js');
 const bookingRouter = require('./routes/bookingRoutes.js');
 const tourPhotoRouter = require('./routes/tourPhotoRoutes.js');
-const {
-  webhookCheckout,
-  webhookCheckoutMiddleware,
-} = require('./controllers/bookingController');
+const { webhookCheckout } = require('./controllers/bookingController');
 const app = express();
 
 // global middleware
@@ -39,7 +36,6 @@ app.use('/api', limiter);
 app.post(
   '/webhook-checkout',
   express.raw({ type: 'application/json' }),
-  webhookCheckoutMiddleware,
   webhookCheckout
 );
 // built-in middleware, it parses incoming requests with JSON

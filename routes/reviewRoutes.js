@@ -15,6 +15,7 @@ const {
   setTourUserIds,
   getReviewById,
   TourFilter,
+  UserFilter,
 } = reviewController;
 
 router.param('id', validID.checkID);
@@ -23,7 +24,7 @@ router.get('/', TourFilter, getReviews);
 
 // protect all routes after this middleware
 router.use(protect);
-
+router.get('/myreviews', UserFilter, getReviews);
 router.get('/:id', getReviewById);
 
 router.post('/', restricTo('user'), setTourUserIds, createReview);

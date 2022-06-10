@@ -36,6 +36,7 @@ const bookingSchema = new mongoose.Schema(
   },
   { toJSON: { virtuals: true }, toObjects: { virtuals: true } }
 );
+bookingSchema.index({ tourStartDate: 1 });
 bookingSchema.pre(/^find/, function (next) {
   this.populate('user').populate({
     path: 'tour',

@@ -75,15 +75,22 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
   }
 
   // Handle the event
-  if (event.type === 'checkout.session.completed') {
-    createBookingCheckout(event.data.object);
-  }
-  if (event.type === 'charge.succeeded') {
-    console.log('charged, send email');
+  switch (event.type) {
+    case 'checkout.session.completed':
+      createBookingCheckout(event.data.object);
+      // Then define and call a function to handle the event checkout.session.completed
+      break;
+    case 'charge.succeeded':
+      console.log('charged, send email');
+      // Then define and call a function to handle the event checkout.session.completed
+      break;
+    // ... handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`);
   }
 
   // Return a 200 response to acknowledge receipt of the event
-  res.status(200).json({ received: true });
+  res.send();
 });
 
 exports.getBookingByUserId = factory.getAll(Booking);

@@ -43,7 +43,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 });
 
 const createBookingCheckout = async (session) => {
-  console.log(session);
+  // console.log(session);
   const tour = session.client_reference_id;
   const user = (await User.findOne({ email: session.customer_email })).id;
   const price = session.amount_total / 100;
@@ -77,6 +77,7 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
   // Handle the event
   switch (event.type) {
     case 'checkout.session.completed':
+      // console.log('checkout completed');
       createBookingCheckout(event.data.object);
       // Then define and call a function to handle the event checkout.session.completed
       break;

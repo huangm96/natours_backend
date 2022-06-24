@@ -40,14 +40,13 @@ app.post(
 );
 // built-in middleware, it parses incoming requests with JSON
 // only use the raw bodyParser for webhooks
-// app.use((req, res, next) => {
-//   if (req.originalUrl === '/webhook-checkout') {
-//     next();
-//   } else {
-//     express.json({ limit: '10kb' });
-//   }
-// });
-app.use(express.json({ limit: '10kb' }));
+app.use((req, res, next) => {
+  if (req.originalUrl === '/webhook-checkout') {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
 // data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 

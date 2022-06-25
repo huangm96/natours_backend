@@ -46,7 +46,7 @@ router.get('/tours-within/:distance/center/:latlng/unit/:unit', getToursWithin);
 
 // mounting router
 router.use('/:id/reviews', reviewRouter);
-router.use('/:id/bookings', bookingRouter);
+router.use('/:id/bookings', protect, bookingRouter);
 
 router.get('/', getAllTours);
 router.get('/:id', getTourById);

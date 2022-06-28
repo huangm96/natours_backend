@@ -17,8 +17,10 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   // 2. create checkout session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
-    success_url: `http://127.0.0.1:3000/me/mybooking`,
-    cancel_url: `https://www.gmail.com`,
+    success_url: `http://127.0.0.1:3000/paymentResult?result=success&amount=${
+      tour.price * 100 * req.body.quantity
+    }`,
+    cancel_url: `http://127.0.0.1:3000/paymentResult?result=fail`,
     customer_email: req.user.email,
     client_reference_id: req.params.id,
     metadata: {

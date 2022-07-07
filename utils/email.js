@@ -12,14 +12,14 @@ module.exports = class Email {
   }
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
-      // SendinBlue
+      // gmail;
       return nodemailer.createTransport({
-        // service: 'SendinBlue',
-        host: 'smtp-relay.sendinblue.com',
-        port: 587,
+        // service: 'gmail',
+        host: process.env.GMAIL_HOST,
+        port: process.env.GMAIL_PORT,
         auth: {
-          user: process.env.SENDINBLUE_USERNAME,
-          pass: process.env.SENDINBLUE_PASSWORD,
+          user: process.env.GMAIL_USERNAME,
+          pass: process.env.GMAIL_PASSWORD,
         },
       });
     } else {

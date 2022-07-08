@@ -66,7 +66,7 @@ This project is part of the online course I've taken at Udemy. [https://www.udem
 
 ---
 
-Check Natours API Documentation for more info.
+Check [Natours API Documentation](https://documenter.getpostman.com/view/8942212/TzCHAVk4#6efa33f4-f1ba-4b32-9486-c0d491550560) for more info.
 
 ### To-do
 
